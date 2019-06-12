@@ -110,6 +110,12 @@ class TodoList
     @todos.each { |todo| yield(todo) }
   end
 
+  def select
+    new_list = TodoList.new(title)
+    each { |todo| new_list.add(todo) if yield(todo) }
+    new_list
+  end
+
   private
 
   def validate_index(idx)
@@ -130,4 +136,8 @@ list.add(todo1) # adds todo1 to end of list, returns list
 list.add(todo2)
 list.add(todo3)
 
-list.each { |todo| puts todo }
+todo1.done!
+
+results = list.select { |todo| todo.done? }
+
+puts results.inspect
