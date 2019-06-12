@@ -4,27 +4,27 @@
 class Todo
   DONE_MARKER = 'X'
   UNDONE_MARKER = ' '
-  
+
   attr_accessor :title, :description, :done
-  
+
   def initialize(title, description='')
     @title = title
     @description = description
     @done = false
   end
-  
+
   def done!
     self.done = true
   end
-  
+
   def done?
     done
   end
-  
+
   def undone!
     self.done = false
   end
-  
+
   def to_s
     "[#{done? ? DONE_MARKER : UNDONE_MARKER}] #{title}"
   end
@@ -36,78 +36,82 @@ end
 
 class TodoList
   attr_accessor :title
-  
+
   def initialize(title)
     @title = title
     @todos = []
   end
-  
+
   def add(new_todo)
     raise TypeError, "Can only add Todo objects" unless new_todo.instance_of?(Todo)
     @todos << new_todo
   end
-  
+
   alias :<< :add
-  
+
   def size
     @todos.size
   end
-  
+
   def first
     @todos.first
   end
-  
+
   def last
     @todos.last
   end
-  
+
   def to_a
     @todos.clone
   end
-  
+
   def done?
     @todos.all?(&:done?)
   end
-  
+
   def item_at(idx=nil)
     validate_index(idx)
     @todos[idx]
   end
-  
+
   def mark_done_at(idx=nil)
     validate_index(idx)
     @todos[idx].done!
   end
-  
+
   def mark_undone_at(idx=nil)
     validate_index(idx)
     @todos[idx].undone!
   end
-  
+
   def done!
     @todos.each(&:done!)
   end
-  
+
   def shift
     @todos.shift
   end
-  
+
   def pop
     @todos.pop
   end
-  
+
   def remove_at(idx=nil)
     validate_index(idx)
     @todos.delete_at(idx)
   end
-  
+
   def to_s
     puts "------ #{title} ------"
     puts @todos
   end
-  
+
+  def each
+    @todos.each { |todo| yield(todo) }
+  end
+
   private
-  
+
   def validate_index(idx)
     raise ArgumentError if idx.nil?
     raise IndexError unless (0..@todos.size - 1).include?(idx)
@@ -125,40 +129,5 @@ list = TodoList.new("Today's Todos")
 list.add(todo1) # adds todo1 to end of list, returns list
 list.add(todo2)
 list.add(todo3)
-#list.add(1)    # raises a TypeError with message "Can only add Todo objects"
-  
-# Interrogate the list
-######################
-list.size
-list.first
-list.last
-list.to_a
-list.done?
 
-# Retrieve an item from the list
-################################
-# list.item_at     # raises an ArgumentError
-list.item_at(1)
-# list.item_at(100) # raises an IndexError
-
-# Mark items in the list
-########################
-# list.mark_done_at # raises an ArgumentError
-list.mark_done_at(1)
-# list.mark_done_at(100) # raises an IndexError
-# list.mark_undone_at # raises an ArgumentError
-list.mark_undone_at(1)
-# list.mark_undone_at(100) # raises an IndexError
-list.done!
-
-# Delete from the list
-######################
-#list.shift # removes and returns the first item in the list
-#list.pop # removes and returns the last item in the list
-#list.remove_at # raises ArgumentError
-list.remove_at(1)
-#list.remove_at(100)
-
-# Output the list
-#################
-list.to_s
+list.each { |todo| puts todo }
