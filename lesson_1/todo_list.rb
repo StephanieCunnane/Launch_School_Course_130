@@ -43,7 +43,7 @@ class TodoList
   end
   
   def add(new_todo)
-    raise TypeError, "Can only add Todo objects" unless new_todo.is_a?(Todo)
+    raise TypeError, "Can only add Todo objects" unless new_todo.instance_of?(Todo)
     @todos << new_todo
   end
   
