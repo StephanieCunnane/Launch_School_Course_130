@@ -117,6 +117,32 @@ class TodoList
     new_list
   end
 
+  def find_by_title(title)
+    each { |todo| return todo if todo.title == title }
+    nil
+  end
+
+  def all_done
+    select(&:done?)
+  end
+
+  def all_not_done
+    select { |todo| !todo.done? }
+  end
+
+  def mark_done(title)
+    each { |todo| todo.done! if todo.title == title }
+    find_by_title(title)
+  end
+
+  def mark_all_done
+    each(&:done!)
+  end
+
+  def mark_all_undone
+    each(&:undone!)
+  end
+
   private
 
   def validate_index(idx)
@@ -133,12 +159,9 @@ list = TodoList.new("Today's Todos")
 
 # Add todos to the list
 #######################
-list.add(todo1) # adds todo1 to end of list, returns list
+list.add(todo1)
 list.add(todo2)
 list.add(todo3)
 
 todo1.done!
 
-results = list.select { |todo| todo.done? }
-
-puts results.inspect
