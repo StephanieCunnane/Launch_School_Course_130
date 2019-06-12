@@ -102,6 +102,7 @@ class TodoList
   end
   
   def to_s
+    puts "------ #{title} ------"
     puts @todos
   end
   
