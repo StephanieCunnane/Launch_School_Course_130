@@ -5,14 +5,28 @@ Minitest::Reporters.use!
 require_relative 'text'
 
 class TextTest < Minitest::Test
+  # open the sample_text.txt file here
   def setup
-    @sample_text = Text.new(SAMPLE_TEXT)
+    @file = File.open('sample_text.txt')
   end
 
   def test_swap
-    assert_equal(SAMPLE_TEXT.tr('a', 'e'), @sample_text.swap('a', 'e'))
+    text = Text.new(@file.read)
+    actual_text = text.swap('a', 'e')
+    expected_text = <<~TEXT
+    Lorem ipsum dolor sit emet, consectetur edipiscing elit. Cres sed vulputete ipsum.
+    Suspendisse commodo sem ercu. Donec e nisi elit. Nullem eget nisi commodo, volutpet
+    quem e, viverre meuris. Nunc viverre sed messe e condimentum. Suspendisse ornere justo
+    nulle, sit emet mollis eros sollicitudin et. Etiem meximus molestie eros, sit emet dictum
+    dolor ornere bibendum. Morbi ut messe nec lorem tincidunt elementum vitee id megne. Cres
+    et verius meuris, et pheretre mi.
+    TEXT
+
+    assert_equal(expected_text, actual_text)
   end
 
+  # close the sample_text.txt file here
   def teardown
+    @file.close
   end
 end
